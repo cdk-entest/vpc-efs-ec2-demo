@@ -1,7 +1,7 @@
 ## Setup EFS for EC2 Instances 
-- cdk to create a efs file system in an existing  vpc 
+- cdk to create a efs file system in an existing vpc 
 - configure mount point target in the vpc 
-- mount the eft to ec2 instances 
+- mount the efs to ec2 instances 
 
 
 ## EFS Stack 
@@ -61,6 +61,7 @@ const efs = new cdk.aws_efs.FileSystem(
 ```bash 
 sudo yum install -y amazon-efs-utils
 ```
+
 ```bash 
 sudo mount -t efs -o tls fs-05ede5fe007965c7b:/ efs
 ```
