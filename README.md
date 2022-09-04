@@ -1,14 +1,66 @@
-# Welcome to your CDK TypeScript project
+## Setup EFS for EC2 Instances 
+- cdk to create a efs file system in an existing  vpc 
+- configure mount point target in the vpc 
+- mount the eft to ec2 instances 
 
-This is a blank project for CDK development with TypeScript.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## EFS Stack 
+look up the existing vpc 
+```tsx
+const vpc = cdk.aws_ec2.Vpc.fromLookup(
+  this,
+  "ExistedVpc",
+  {
+    region: this.region,
+    vpcId: props.vpcId,
+    vpcName: props.vpcName
+  }
+)
+```
 
-## Useful commands
+security group for efs file system 
+```tsx
+const efsSecurityGroup = new cdk.aws_ec2.SecurityGroup(
+  this,
+  "EfsSecurityGroup",
+  {
+    securityGroupName: "EfsSecurityGroup",
+    vpc: vpc
+  }
+)
 
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `cdk deploy`      deploy this stack to your default AWS account/region
-* `cdk diff`        compare deployed stack with current state
-* `cdk synth`       emits the synthesized CloudFormation template
+efsSecurityGroup.addIngressRule(
+  cdk.aws_ec2.Peer.securityGroupId(ec2SecurityGroup.securityGroupId),
+  cdk.aws_ec2.Port.tcp(2049),
+  "associate with security group of the ec2"
+)
+```
+
+efs file system cdk L2 construct 
+```tsx
+const efs = new cdk.aws_efs.FileSystem(
+  this,
+  "EfsDemo",
+  {
+    fileSystemName: "EfsDemo",
+    vpc: vpc,
+    performanceMode: cdk.aws_efs.PerformanceMode.GENERAL_PURPOSE,
+    securityGroup: efsSecurityGroup
+    // default mount point target will be created per subnet 
+    // vpcSubnets to select subnet for mount target 
+  }
+)
+```
+
+## Mount FileSystem in an EC2 
+- associate the security of mount targest with ec2 on nfs 2049 port 
+- install amazon-efs-utils in ec2 
+- mount options and commands 
+
+
+```bash 
+sudo yum install -y amazon-efs-utils
+```
+```bash 
+sudo mount -t efs -o tls fs-05ede5fe007965c7b:/ efs
+```
