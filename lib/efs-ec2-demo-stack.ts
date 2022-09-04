@@ -49,6 +49,12 @@ export class EfsEc2DemoStack extends cdk.Stack {
       }
     )
 
+    ec2SecurityGroup.addIngressRule(
+      cdk.aws_ec2.Peer.anyIpv4(),
+      cdk.aws_ec2.Port.tcp(22),
+      "allo ssh from anyIpv4"
+    )
+
     new cdk.aws_ec2.Instance(
       this,
       "PubEc2",
@@ -87,7 +93,7 @@ export class EfsEc2DemoStack extends cdk.Stack {
     )
 
     // efs 
-    const efs = new cdk.aws_efs.FileSystem(
+    new cdk.aws_efs.FileSystem(
       this,
       "EfsDemo",
       {
