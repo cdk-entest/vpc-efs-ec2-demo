@@ -14,6 +14,13 @@ date: 2022-09-13
 - EFS mount target
 - Peer security group between EC2 and EFS, port 2049
 
+<LinkedImage
+  href="#"
+  height={400}
+  alt="Introduction to EFS"
+  src="/thumbnail/remote-ec2-ssm.png"
+/>
+
 ## Setup EFS for EC2 Instances
 
 - cdk to create a efs file system in an existing vpc
