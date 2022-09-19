@@ -1,8 +1,6 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { StackProps, Stack } from 'aws-cdk-lib';
-import { Effect } from 'aws-cdk-lib/aws-iam';
-import { warn } from 'console';
+import { StackProps} from 'aws-cdk-lib';
 
 interface EfsEc2DemoProps extends StackProps {
   vpcId: string;
